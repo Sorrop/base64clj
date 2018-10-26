@@ -31,7 +31,7 @@
   (->> b64s
        (map #(get rev-b64table %))
        (filter (comp not nil?))
-       (partition 4 4 nil)
+       (partition-all 4)
        (mapcat #(apply handle-quartet %))
        (map u_int->b)
        (byte-array)))
