@@ -1,5 +1,9 @@
 (ns base64clj.core-test
   (:require [clojure.test :refer :all]
+            [clojure.test.check :as tc]
+            [clojure.test.check.generators :as gen]
+            [clojure.test.check.properties :as prop]
+            [clojure.test.check.clojure-test :refer [defspec]]
             [base64clj.encode :refer :all]
             [base64clj.decode :refer :all]))
 
@@ -20,3 +24,12 @@
                   target)
                (= msg
                   (decode-to-string target)))))))
+
+(def byte-arrays-encoding-decoding
+  (prop/for-all [bs (gen/such-that not-empty (gen/vector gen/byte))]
+                (let [barr (byte-array bs)
+                      encoding (encode barr)
+                      decoded (decode encoding)]
+                  (= (seq barr) (seq decoded)))))
+
+(defspec byte-arrays-encoding-decoding-test 10000 byte-arrays-encoding-decoding)
