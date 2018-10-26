@@ -40,7 +40,7 @@ Following the steps from [here](https://www.astrecipes.net/blog/2018/07/20/cmd-l
        $./bin/native-image -H:+ReportUnsupportedElementsAtRuntime -J-Xmx3G -J-Xms3G --no-server -jar /path/to/base64clj.jar
 4) Invoke the created image example:
         
-       $./base64clj encode base64_meme.jpeg
+       $./base64clj encode base64_meme.jpeg encoded_output.txt
        
 
 ## License
