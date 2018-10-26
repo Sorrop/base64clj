@@ -21,8 +21,8 @@
 
 (defn handle-ending [out carry-num carry-bits]
   (if (= carry-bits 4)
-    (conj out (bit-shift-left carry-num 2))
-    (conj out (bit-shift-left carry-num 4))))
+    (conj out (bit-shift-left carry-num 2) 2r1000000)
+    (conj out (bit-shift-left carry-num 4) 2r1000000 2r1000000)))
 
 (defn extract-sextets [bs]
   (loop [bytes bs
@@ -54,24 +54,14 @@
         (handle-ending out carry-num carry-bits)
         out))))
 
-(defn extract-padding [last-triplet]
-  (condp = (count last-triplet)
-    3 ""
-    2 "="
-    "=="))
-
 (defn encode [#^bytes bs]
   (let [partnd (->> bs
                     (map b->u_int)
-                    (partition 3 3 nil)
-                    (into []))
-        last-triplet (last partnd)
-        padding (extract-padding last-triplet)]
-    (str (->> partnd
-              (mapcat extract-sextets)
-              (map #(get b64table %))
-              seq->str)
-         padding)))
+                    (partition-all 3))]
+    (->> partnd
+         (mapcat extract-sextets)
+         (map #(get b64table % \=))
+         seq->str)))
 
 (defn encode-string [s]
   (-> s
