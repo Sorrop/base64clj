@@ -1,8 +1,5 @@
 (ns base64clj.decode
-  (:require [base64clj.encode :refer [b64table strip-newlines]]))
-
-(defonce rev-b64table
-  (zipmap b64table (range 64)))
+  (:require [base64clj.encode :refer [rev-b64table]]))
 
 (defn u_int->b [i]
   (if (<= i 127)
@@ -40,8 +37,6 @@
        (byte-array)))
 
 (defn decode-to-string [b64s]
-  (->> b64s
-       (strip-newlines)
-       (decode)
-       (map char)
-       (apply str)))
+  (-> b64s
+      (decode)
+      (String. "UTF-8")))

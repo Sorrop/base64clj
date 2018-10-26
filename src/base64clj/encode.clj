@@ -4,11 +4,14 @@
 (defonce b64table
   "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/")
 
+(defonce rev-b64table
+  (zipmap b64table (range 64)))
+
 (defn strip-newlines [s]
   (filter #(not= % \newline) s))
 
 (defn str->barr [s]
-  (->> s (map byte) byte-array))
+  (.getBytes s "UTF-8"))
 
 (defn seq->str [s]
   (apply str s))
