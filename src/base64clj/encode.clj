@@ -55,13 +55,12 @@
         out))))
 
 (defn encode [#^bytes bs]
-  (let [partnd (->> bs
-                    (map b->u_int)
-                    (partition-all 3))]
-    (->> partnd
-         (mapcat extract-sextets)
-         (map #(get b64table % \=))
-         seq->str)))
+  (->> bs
+       (map b->u_int)
+       (partition-all 3)
+       (mapcat extract-sextets)
+       (map #(get b64table % \=))
+       seq->str))
 
 (defn encode-string [s]
   (-> s
